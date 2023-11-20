@@ -1,0 +1,4 @@
+*.csv
+app.js
+*.env
+node_modules/
