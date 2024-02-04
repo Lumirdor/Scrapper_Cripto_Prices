@@ -1,3 +1,7 @@
+/// Este es el archivo principal del repositorio.
+// El programa se conecta con Binance y crea un archivo .csv con datos de velas de la criptomoneda deseada
+// La vela puede ser desde 1min hasta dias/semanas
+
 require('dotenv').config();
 const fs = require('fs');
 const Binance = require('node-binance-api');
@@ -15,7 +19,7 @@ const segundosDesde1970 = Math.floor(fechaActual.getTime());
 const medicionTime = 1690247520;
 const velas = {};
 let time_viejo = 0;
-const nombreArchivo = 'precios22.csv'
+const nombreArchivo = 'precio_btc_1h.csv'
 
     
     //Le pongo el titulo al csv para que tengan nombres las columnas
@@ -54,7 +58,7 @@ console.log('Este es el primer elemento de contenido: contenido[0]'+contenido[0]
 
 
 function leer_velas(tiempo_fin){//Leo un conjunto de velas
-  binance.candlesticks("BTCUSDT", "1m", (error, ticks, symbol) => {
+  binance.candlesticks("BTCUSDT", "1h", (error, ticks, symbol) => {
     //console.info("Velas registradas:", ticks);
   const contenido_CSV = ticks.map(row => row.join(',')).join('\n');
     grabar(contenido_CSV, nombreArchivo)
@@ -62,14 +66,15 @@ function leer_velas(tiempo_fin){//Leo un conjunto de velas
     let first_tick = ticks[0];
     let [time, open, high, low, close, volume, closeTime, assetVolume, trades, buyBaseVolume, buyAssetVolume, ignored] = first_tick;
     time_viejo = time;
-  }, {limit: 10, endTime: tiempo_fin});
+  }, {limit: 1000, endTime: tiempo_fin});
 }
 
 
 async function imprimir_varios(){
   const bloque = 60000000;
-  const limite = 1;
-  const tiempo_1ago = 1690929180000;
+  const limite = 100;
+  //const tiempo_1ago = 1690929180000;
+  const tiempo_1ago = fechaActual;
 
   for (i=1; i<=limite; i++){
     const tiempo = tiempo_1ago - ((limite - i) * bloque);
